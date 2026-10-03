@@ -1,0 +1,3 @@
+ALTER TABLE url ADD COLUMN expires_at TIMESTAMPTZ;
+UPDATE url SET expires_at = NOW() + INTERVAL '500 seconds';
+ALTER TABLE url ALTER COLUMN expires_at SET NOT NULL;
