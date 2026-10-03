@@ -8,3 +8,4 @@ describe("shorten", () => {
     expect(url.url).toBe("https://example.com");
   });
 });
+
