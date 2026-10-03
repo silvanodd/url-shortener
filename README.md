@@ -38,13 +38,14 @@ encore test
 ```
 
 
-## Dev test example
-curl http://localhost:4000/url -d '{"url": "https://encore.dev"}'
-{"url":"https://encore.dev","id":"FNZZoO_K"}                                                                                                                                      
-curl http://localhost:4000/url/FNZZoO_K                      
-{"url":"https://encore.dev","id":"FNZZoO_K"}                                                                                                                                    
-  Encore development server running!
+## Notes
+curl http://localhost:4000/url -d '{"url": "https://encore.dev"}'  
+{"url":"https://encore.dev","id":"FNZZoO_K"}                                                                                                                                       
 
-  Your API is running at:     http://127.0.0.1:4000
-  Development Dashboard URL:  http://127.0.0.1:9400/url-shortener-r442
-  MCP SSE URL:                http://127.0.0.1:9900/sse?appID=url-shortener-r442
+curl http://localhost:4000/url/FNZZoO_K                      
+{"url":"https://encore.dev","id":"FNZZoO_K"}.              
+
+  Encore development server running!  
+  Your API is running at:     http://127.0.0.1:4000   
+  Development Dashboard URL:  http://127.0.0.1:9400/url-shortener-r442.   
+  MCP SSE URL:                http://127.0.0.1:9900/sse?appID=url-shortener-r442. 
