@@ -53,7 +53,8 @@ jobs:
     needs: tag
     steps:
       - name: Print message
-        run: echo "Tag workflow run #${{ github.run_number }} finished for ${{ github.sha }}"
+        run: |
+          echo "Tag workflow run #${{ github.run_number }} finished for ${{ github.sha }}"
 
   already-tagged:
     runs-on: ubuntu-latest
@@ -63,4 +64,5 @@ jobs:
       - name: Report skipped tag
         env:
           EXISTING: ${{ needs.tag.outputs.existing }}
-        run: echo "::notice::No tag created — ${{ github.sha }} is already tagged ($EXISTING)."
+        run: |
+          echo "::notice::No tag created — ${{ github.sha }} is already tagged ($EXISTING)."
