@@ -1,3 +1,4 @@
+# Tags each pushed commit with the workflow run number, unless it's already tagged.
 name: Tag on push
 
 on:
