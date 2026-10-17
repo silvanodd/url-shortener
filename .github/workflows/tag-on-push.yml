@@ -1,0 +1,40 @@
+name: Tag on push
+
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Tag commit with run number if untagged
+        env:
+          TAG: ${{ github.run_number }}
+        run: |
+          existing=$(git tag --points-at "$GITHUB_SHA")
+          if [ -n "$existing" ]; then
+            echo "Commit $GITHUB_SHA already tagged: $existing — skipping."
+            exit 0
+          fi
+
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "::error::Tag $TAG already exists on another commit."
+            exit 1
+          fi
+
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG"
+          echo "Tagged $GITHUB_SHA as $TAG"
