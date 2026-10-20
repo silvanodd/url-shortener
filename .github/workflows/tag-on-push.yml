@@ -48,16 +48,18 @@ jobs:
           echo "Run #$TAG: tagged $GITHUB_SHA as $TAG"
           echo "tagged=true" >> "$GITHUB_OUTPUT"
 
-  add-tag:
-    runs-on: ubuntu-latest
-    needs: tag
-    if: needs.tag.outputs.tagged == 'true'
-    steps:
-      - name: Print message
-        run: |
-          echo "Tag workflow run #${{ github.run_number }} finished for ${{ github.sha }}"
+  echo-add-tag:
+      runs-on: ubuntu-latest
+      needs: tag
+      if: needs.tag.outputs.tagged == 'true'
+      steps:
+        - name: Report skipped tag
+          env:
+            EXISTING: ${{ needs.tag.outputs.existing }}
+          run: |
+            echo "::notice::Run #${{ github.run_number }}: tag created — ${{ github.sha }} is  tagged ($EXISTING)."
 
-  already-tagged:
+  echo-already-tagged:
     runs-on: ubuntu-latest
     needs: tag
     if: needs.tag.outputs.tagged == 'false'
