@@ -15,6 +15,7 @@ permissions:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    if: github.ref_name != 'uat'
     outputs:
       tagged: ${{ steps.tag.outputs.tagged }}
       existing: ${{ steps.tag.outputs.existing }}
@@ -79,3 +80,32 @@ jobs:
           EXISTING: ${{ needs.tag.outputs.existing }}
         run: |
           echo "::notice::Run #${{ github.run_number }}: no tag created — ${{ github.sha }} is already tagged ($EXISTING)."
+
+  # On uat, tag the commit with the build number from release.tag, prefixed with uat-.
+  uat-tag:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'uat'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Tag commit from release.tag
+        run: |
+          if [ ! -f release.tag ]; then
+            echo "::error::release.tag not found on $GITHUB_SHA."
+            exit 1
+          fi
+
+          TAG="uat-$(tr -d '[:space:]' < release.tag)"
+
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "::notice::$TAG already exists on $(git rev-list -n 1 "$TAG") — skipping."
+            exit 0
+          fi
+
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG"
+          echo "::notice::Tagged $GITHUB_SHA as $TAG"
